@@ -1,15 +1,15 @@
 #include <stdio.h>
-#include "getch.h"
+#include <conio.h>
 using namespace  std;
 #include "stack.h"
 #include "linklist.h"
 #define LETTER 1
 #define OP 0
 #define LINENUM 20
-#include <unistd.h>
-#include <sys/ioctl.h>
+//#include <unistd.h>
+//#include <sys/ioctl.h>
 
-struct winsize w;
+//struct winsize w;
 
 Node *content=new Node;
 
@@ -22,7 +22,8 @@ int INSERTMODE=0;
 
 void input(char t)
 {
-    if(t=='\n'){
+    if(t==13){
+    	printf("get!\n");
         Node *p=new Node;
         Node *q=pointer_x->next;
         Node *r=pointer_y->nextline;
@@ -38,7 +39,7 @@ void input(char t)
         pointer_y->length=newlength-1;
         pointer_y->nextline=r;
     }
-    if(t!='\n'){
+    if(t!=13){
         Node* p=pointer_x->next;
         pointer_x->next=new Node;
         pointer_x=pointer_x->next;
@@ -51,16 +52,16 @@ void input(char t)
 char wait_for_key()
 {
     int ch;
-    ch=getche();
+    ch=getch();
     printf("\n%d\n",ch);
     return ch;
 }
 
 void print()
 {
-    ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);//获取窗口大小
-    printf ("lines %d\n", w.ws_row);
-    printf ("columns %d\n", w.ws_col);
+    //ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);//获取窗口大小
+   // printf ("lines %d\n", w.ws_row);
+    //printf ("columns %d\n", w.ws_col);
     Node *q=content;
     while(q!=NULL){
         if(q==pointer_x)
@@ -87,7 +88,7 @@ int check_op=0;
 int check(char key)
 {
     //输入退回
-    if(key==127){  
+    if(key==8){  
         if(pointer_x_num==0){
             if(pointer_y_num==0)
                 return OP;
@@ -122,14 +123,14 @@ int check(char key)
         pointer_x_num--;
         return OP;
     }
-    if(key==27){
+    if(key== -32){
         check_op=1;
-        key=getche();
+        //printf("get!\n");
     }
-    if(check_op>0&&key==91){
-        key=getche();
+    if(check_op>0){
+    	key=getch();
         switch(key){
-            case 'A':{
+            case 'H':{ //上
                 if(pointer_y_num!=0){
                     pointer_y_num--;
                     Node *s=content;
@@ -151,7 +152,7 @@ int check(char key)
                     pointer_x=p;
                 }
             }break;
-            case 'B':{
+            case 'P':{
                 if(pointer_y->nextline!=NULL)
                 {
                     pointer_y_num++;
@@ -171,13 +172,13 @@ int check(char key)
                     pointer_x=p;
                 }
             }break;
-            case 'C':{
+            case 'M':{
                 if(pointer_x->next!=NULL){
                     pointer_x=pointer_x->next;
                     pointer_x_num++;
                 }
             }break;
-            case 'D':{
+            case 'K':{
                 if(pointer_x_num==0)
                     break;
                 Node*p=pointer_y;
@@ -192,7 +193,7 @@ int check(char key)
         return OP;
     }
     else{
-        if(check_op==1&&key==27){
+        if(key==27){
         printf("ESC\n");
         INSERTMODE=0;
         check_op=0;
@@ -210,7 +211,7 @@ int main()
     content->length=0;
     char key;
     while(1){
-        system("clear");
+        system("cls");
         print();
         key=wait_for_key();
         if(INSERTMODE)
