@@ -1,15 +1,13 @@
 #include <stdio.h>
 #include <conio.h>
-using namespace  std;
+#include "OP_struct.h"
+typedef OPDATA selem;
 #include "stack.h"
 #include "linklist.h"
 #define LETTER 1
 #define OP 0
 #define LINENUM 20
-//#include <unistd.h>
-//#include <sys/ioctl.h>
 
-//struct winsize w;
 
 Node *content=new Node;
 
@@ -59,9 +57,6 @@ char wait_for_key()
 
 void print()
 {
-    //ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);//获取窗口大小
-   // printf ("lines %d\n", w.ws_row);
-    //printf ("columns %d\n", w.ws_col);
     Node *q=content;
     while(q!=NULL){
         if(q==pointer_x)
@@ -203,9 +198,10 @@ int check(char key)
     check_op=0;
     return LETTER;
 }
-
 int main()
 {
+	stack *s;//记录操作的链栈
+    Init_stack(s);
     content->next=NULL;
     content->nextline=NULL;
     content->length=0;
@@ -221,8 +217,15 @@ int main()
             else{}
         else{
             check(key);
-            if(key=='i')
-                INSERTMODE=1;
+            switch(key){
+	            case 'i':
+	                INSERTMODE=1;break;
+	            case 'u':
+	            	roolback(s);break;
+	            case 'r':
+	            	redo(s);break;
+	            default:break;
+	        }
         }
     }
     return 0;
