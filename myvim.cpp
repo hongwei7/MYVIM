@@ -267,9 +267,9 @@ void roolback_enter(int y)
 void roolback_delenter(int x,int y)
 {
     pointer_x_num=x;
-    pointer_y_num=y-1;
+    pointer_y_num=y;
     Node *p=content,*q;
-    for(int i=0;i<y-1;i++)
+    for(int i=0;i<y;i++)
         p=p->nextline;
     pointer_y=p;
     for(int i=0;i<x;i++)
