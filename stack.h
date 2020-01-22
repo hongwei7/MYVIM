@@ -2,7 +2,7 @@
 using namespace std;
 struct stackNode
 {
-    selem data;
+    selem *data;
     stackNode* next;
 };
 struct stack//链栈
@@ -27,10 +27,11 @@ void Destroy_Node(stack *& root,stackNode *&s)
     if(s==NULL)return;
     stackNode* p=s,*q=s->next;
     while(q!=NULL){
+        printf("%d\n", root->top);
         root->top--;
+        p=q->next;
         free(q);
-        p=q;
-        q=q->next;
+        q=p;
     }
     free(q);
     root->top--;
@@ -40,12 +41,23 @@ bool Stack_empty(stack * s)
 {
     return s->top==-1;
 }
-void push(stack *& s,selem e)
+void push(stack *& s,selem *&e)
 {
     if(s->top==-1){
         s->firstNode=new stackNode;
         s->top++;
         s->now++;
+        s->nowNode=s->firstNode;
+        s->nowNode->data=e;
+        s->nowNode->next=NULL;
+        return;
+    }
+    if(s->now==-1){
+        Destroy_Node(s,s->nowNode->next);
+        free(s->nowNode);
+        s->firstNode=new stackNode;
+        s->top=0;
+        s->now=0;
         s->nowNode=s->firstNode;
         s->nowNode->data=e;
         s->nowNode->next=NULL;
@@ -61,40 +73,14 @@ void push(stack *& s,selem e)
     s->nowNode->next=NULL;
     return ;
 }
-/*
+
 void Disp_stack(stack *s)
 {
     stackNode *p=s->firstNode;
     if(p==NULL)return;
     for(int i=0;i<=s->top;i++)
     {
-        cout<<p->data<<" ";
+        cout<<p->data->name<<" "<<p->data->x<<" "<<p->data->y<<" "<<p->data->data<<endl;
         p=p->next;
     }cout<<endl;
-}
-*/
-void roolback(stack *&s)
-{
-    if(s->now==-1)return;
-    printf("roolback:%c\n", s->nowNode->data);
-    s->nowNode=s->firstNode;
-    for(int i=0;i<s->now-1;i++){
-        s->nowNode=s->nowNode->next;
-    }
-    s->now--;
-    return;
-}
-void redo(stack *&s)
-{
-    if(s->nowNode==NULL||s->nowNode->next==NULL)return;
-    if(s->now==-1){
-        printf("redo:%c\n",s->firstNode->data );
-        s->nowNode=s->firstNode;
-        s->now++;
-        return;
-    }
-    printf("redo:%c\n",s->nowNode->next->data );
-    s->nowNode=s->nowNode->next;
-    s->now++;
-    return;
 }
