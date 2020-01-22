@@ -216,7 +216,7 @@ void roolback_input(int x,int y)
 
     pointer_x_num=x;
     pointer_y_num=y;
-    printf("%d %d\n",pointer_x_num,pointer_y_num);
+    //printf("%d %d\n",pointer_x_num,pointer_y_num);
     Node *p=content,*q;
     for(int i=0;i<y;i++)
         p=p->nextline;
@@ -234,7 +234,7 @@ void roolback_back(int x,int y,char e)
 {
     pointer_x_num=x-1;
     pointer_y_num=y;
-    printf("%d %d  \n",pointer_x_num,pointer_y_num);
+    //printf("%d %d  \n",pointer_x_num,pointer_y_num);
     //system("pause");
     Node *p=content,*q;
     for(int i=0;i<y;i++)
@@ -242,7 +242,7 @@ void roolback_back(int x,int y,char e)
     pointer_y=p;
     for(int i=0;i<x-1;i++){
         p=p->next;
-        printf("%c\n",p->data );
+        //printf("%c\n",p->data );
     }
     //system("pause");
     pointer_x=p;
@@ -282,7 +282,7 @@ void operate_OP(int mode,OPDATA* opdata)//执行撤回或重做
 {
     if(mode==1)//撤回模式
     {
-        printf("%c\n",opdata->name );
+        //printf("%c\n",opdata->name );
         switch(opdata->name){
             case 'i':roolback_input(opdata->x,opdata->y); break;
             case 'b':roolback_back(opdata->x,opdata->y,opdata->data);break;
@@ -293,7 +293,13 @@ void operate_OP(int mode,OPDATA* opdata)//执行撤回或重做
     }
     else
     {
-
+        switch(opdata->name){
+            case 'i':roolback_back(opdata->x,opdata->y,opdata->data); break;
+            case 'b':roolback_input(opdata->x,opdata->y);break;
+            case 'n':roolback_delenter(opdata->x,opdata->y);break;
+            case 'd':roolback_enter(opdata->y);break;
+            default:printf("error!\n");break;
+        }
     }
 }
 void roolback(stack *&s)
@@ -353,8 +359,7 @@ int main()
 	            case 'u':
 	            	roolback(s);break;
 	            case 'r':
-	            	redo(s);
-                break;
+	            	redo(s);break;
 	            default:break;
 	        }
         }
