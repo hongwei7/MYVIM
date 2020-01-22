@@ -335,6 +335,27 @@ void redo(stack *&s)
     s->now++;
     return;
 }
+void paste()
+{
+    getch();
+    if (!IsClipboardFormatAvailable(CF_TEXT))
+        printf("error: 剪贴板中没有文本信息\n");
+    else
+    {
+        OpenClipboard(NULL);
+        HGLOBAL hglb = GetClipboardData(CF_TEXT);
+    if (hglb != NULL)
+    {
+        char *s = (char*)GlobalLock(hglb);
+        if (s != NULL)
+        {
+            printf("%s\n", s);
+            GlobalUnlock(hglb);
+        }
+    }
+        CloseClipboard();
+    }
+}
 void save()
 {
 
