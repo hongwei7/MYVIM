@@ -213,7 +213,6 @@ int check(char key,int recored=1)
 
 void roolback_input(int x,int y)
 {
-
     pointer_x_num=x;
     pointer_y_num=y;
     //printf("%d %d\n",pointer_x_num,pointer_y_num);
@@ -280,22 +279,24 @@ void roolback_delenter(int x,int y)
 }
 void operate_OP(int mode,OPDATA* opdata)//执行撤回或重做
 {
+    printf("operate_OP\n");
     if(mode==1)//撤回模式
     {
         //printf("%c\n",opdata->name );
         switch(opdata->name){
             case 'i':roolback_input(opdata->x,opdata->y); break;
-            case 'b':roolback_back(opdata->x,opdata->y,opdata->data);break;
+            case 'b':roolback_back(opdata->x,opdata->y,opdata->data);pointer_x=pointer_x->next;pointer_x_num++;break;
             case 'n':roolback_enter(opdata->y);break;
             case 'd':roolback_delenter(opdata->x,opdata->y);break;
             default:printf("error!\n");break;
         }
     }
-    else
+    else//重做模式
     {
+        printf("get\n");
         switch(opdata->name){
-            case 'i':roolback_back(opdata->x,opdata->y,opdata->data); break;
-            case 'b':roolback_input(opdata->x,opdata->y);break;
+            case 'i':roolback_back(opdata->x+1,opdata->y,opdata->data);pointer_x=pointer_x->next;pointer_x_num++; break;
+            case 'b':roolback_input(opdata->x-1,opdata->y);break;
             case 'n':roolback_delenter(opdata->x,opdata->y);break;
             case 'd':roolback_enter(opdata->y);break;
             default:printf("error!\n");break;
@@ -329,10 +330,18 @@ void redo(stack *&s)
         s->now++;
         return;
     }
-    operate_OP(1,s->nowNode->next->data );
+    operate_OP(0,s->nowNode->next->data );
     s->nowNode=s->nowNode->next;
     s->now++;
     return;
+}
+void save()
+{
+
+}
+void read()
+{
+
 }
 int main()
 {
@@ -344,7 +353,7 @@ int main()
     while(1){
         system("cls");
         print();
-        //Disp_stack(s);
+        Disp_stack(s);
         key=wait_for_key();
         if(INSERTMODE)
             if(check(key)){

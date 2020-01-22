@@ -18,16 +18,12 @@ void Init_stack(stack *& s)
     s->top=-1;
     s->now=s->top;
 }
-void Destroy_stack(stack *& s)
-{
-    free(s);
-}
-void Destroy_Node(stack *& root,stackNode *&s)
+void Destroy_Node(stack *& root,stackNode *&s)//删除节点以及节点后面的所有节点
 {
     if(s==NULL)return;
     stackNode* p=s,*q=s->next;
     while(q!=NULL){
-        printf("%d\n", root->top);
+        //printf("%d\n", root->top);
         root->top--;
         p=q->next;
         free(q);
@@ -37,6 +33,12 @@ void Destroy_Node(stack *& root,stackNode *&s)
     root->top--;
     return ;
 }
+void Destroy_stack(stack *& s)
+{
+    Destroy_Node(s,s->firstNode);
+    free(s);
+}
+
 bool Stack_empty(stack * s)
 {
     return s->top==-1;
@@ -83,4 +85,5 @@ void Disp_stack(stack *s)
         cout<<p->data->name<<" "<<p->data->x<<" "<<p->data->y<<" "<<p->data->data<<endl;
         p=p->next;
     }cout<<endl;
+    printf("top: %d now:%d \n",s->top ,s->now);
 }
