@@ -1,9 +1,11 @@
 #include <conio.h>
 #include <stdio.h>
+using namespace std;
+#include <iostream>
 int main(){
-	while(1){
-		int t=getch();
-		printf("input: %d %c\n",t,t);
-	}
+	char name[10];
+	scanf(name);
+	printf("%s\n",name );
+	system("pause");
 }
 
