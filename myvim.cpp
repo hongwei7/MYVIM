@@ -6,7 +6,6 @@ typedef OPDATA selem;
 #include "linklist.h"
 #define LETTER 1
 #define OP 0
-#define LINENUM 20
 #include<ctype.h>
 #include <windows.h>
 #include<fstream>
