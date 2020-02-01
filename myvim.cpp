@@ -140,8 +140,15 @@ void add_op(char name,int x,int y,char e) //记录一个操作并存储起来
 }
 
 int paste();
-void input(char t,int recored=1) //将输入的字符保存到结构中
+void input(char t,int recored=1) //将输入的字符保存到结构中 recorded表示是否记录此操作
 {
+    if(t==9){
+        input(32);
+        input(32);
+        input(32);
+        input(32);
+        return;
+    }
     if(t==13){
         if(recored)
             add_op('n',pointer_x_num,pointer_y_num,13);
