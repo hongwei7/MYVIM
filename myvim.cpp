@@ -1,16 +1,126 @@
 #include <stdio.h>
 #include <conio.h>
-#include "OP_struct.h"
-typedef OPDATA selem;
-#include "stack.h"
-#include "linklist.h"
-#define LETTER 1
-#define OP 0
 #include<ctype.h>
 #include <windows.h>
 #include<fstream>
 #include "color.cpp"
 #include <string>
+#include<iostream>
+using namespace std;
+#define max_size 50
+#define LETTER 1
+#define OP 0
+typedef char elem;
+struct Node
+{
+    elem data;
+    Node * next;
+    Node * nextline;
+    int length;
+};
+struct OPDATA
+{
+    char name;//操作名 i,b,n,d 输入，删除，回车,删除回车
+    int x;
+    int y;//操作坐标
+    char data;//操作数据
+    OPDATA(char n,int _x,int _y,char e){
+        name=n;
+        x=_x;
+        y=_y;
+        data=e;
+    }
+};
+typedef OPDATA selem;
+
+struct stackNode
+{
+    selem *data;
+    stackNode* next;
+};
+struct stack//链栈
+{
+    stackNode *firstNode;
+    int top,now;
+    stackNode *nowNode;
+};
+void Init_stack(stack *& s)
+{
+    s=new stack;
+    s->firstNode=new stackNode;
+    s->top=-1;
+    s->now=s->top;
+}
+void Destroy_Node(stack *& root,stackNode *&s)//删除节点以及节点后面的所有节点
+{
+    if(s==NULL)return;
+    stackNode* p=s,*q=s->next;
+    while(q!=NULL){
+        //printf("%d\n", root->top);
+        root->top--;
+        p=q->next;
+        free(q);
+        q=p;
+    }
+    free(q);
+    root->top--;
+    return ;
+}
+void Destroy_stack(stack *& s)
+{
+    Destroy_Node(s,s->firstNode);
+    free(s);
+}
+
+bool Stack_empty(stack * s)
+{
+    return s->top==-1;
+}
+void push(stack *& s,selem *&e)
+{
+    if(s->top==-1){
+        s->firstNode=new stackNode;
+        s->top++;
+        s->now++;
+        s->nowNode=s->firstNode;
+        s->nowNode->data=e;
+        s->nowNode->next=NULL;
+        return;
+    }
+    if(s->now==-1){
+        Destroy_Node(s,s->nowNode->next);
+        free(s->nowNode);
+        s->firstNode=new stackNode;
+        s->top=0;
+        s->now=0;
+        s->nowNode=s->firstNode;
+        s->nowNode->data=e;
+        s->nowNode->next=NULL;
+        return;
+    }
+    Destroy_Node(s,s->nowNode->next);
+    s->nowNode->next=new stackNode;
+    stackNode *p=s->nowNode;
+    s->nowNode=s->nowNode->next;
+    s->now++;
+    s->top++;
+    s->nowNode->data=e;
+    s->nowNode->next=NULL;
+    return ;
+}
+
+void Disp_stack(stack *s)
+{
+    stackNode *p=s->firstNode;
+    if(p==NULL)return;
+    for(int i=0;i<=s->top;i++)
+    {
+        cout<<p->data->name<<" "<<p->data->x<<" "<<p->data->y<<" "<<p->data->data<<endl;
+        p=p->next;
+    }cout<<endl;
+    printf("top: %d now:%d \n",s->top ,s->now);
+}
+
 
 Node *content=new Node;
 Node *pointer_y=content;
@@ -21,6 +131,8 @@ int print_area_x,print_area_y;
 stack *s;//记录操作的链栈
 string title="新文件-未保存";
 int INSERTMODE=0;
+
+
 
 void add_op(char name,int x,int y,char e)
 {
@@ -125,9 +237,9 @@ void print()
         q=q->nextline;
         localy++;
     }
-    printf("\n");
     for(;localy<rows;localy++)
-        printf("\n");
+        printf("~\n");
+    printf("\n");
     if(INSERTMODE){
         set_console_color(1);
         printf("%10s   ","插入模式");
@@ -435,8 +547,22 @@ void save()
 {
     string file;
     system("cls");
-    printf("输入要保存的文件名（或保存路径+文件名）:\n");
-    cin>>file;
+    if(title!="新文件-未保存"){
+        char choice;
+        printf("是否要保存（y/n）\n");
+        cin>>choice;
+        switch(choice){
+            case 'y':;
+            case 'Y':file.assign(title); break;
+            case 'n':;
+            case 'N':return;
+            default:save();return;
+        }
+    }
+    else{
+        printf("输入要保存的文件名（或保存路径+文件名）:\n");
+        cin>>file;
+    }
     ofstream outfile;
     outfile.open(file,ios::out);
     
@@ -464,7 +590,7 @@ void read()
 {
     string file;
     system("cls");
-    printf("输入要加载的文件名（或加载路径+文件名）:\n");
+    printf("输入要打开的文件名（或加载路径+文件名）:\n");
     cin>>file;
     char ch[200],*p;
     //printf("%s\n", file);
