@@ -656,13 +656,13 @@ int main() //程序主函数
         else{
             check(key);
             switch(key){
-	            case 'i':INSERTMODE=1;break;
-	            case 'u':roolback(s);break;
-	            case 'r':redo(s);break;
-                case 's':save();break;
-                case 'o':read();break;
-                case 'h':help();break;
-                case 'q':{
+	            case 'i':INSERTMODE=1;break; //插入模式
+	            case 'u':roolback(s);break;  //撤回操作
+	            case 'r':redo(s);break;      //重做操作
+                case 's':save();break;       //保存
+                case 'o':read();break;       //读取
+                case 'h':help();break;       //帮助
+                case 'q':{                   //退出
                     system("cls");
                     printf("你是否要退出？未保存的文件都将丢失（y/n）\n");
                     char choice;
