@@ -1,7 +1,7 @@
 #include "stdio.h"
 #include "windows.h"
  int columns, rows;
- void set_pointer(int x,int y)
+ void set_pointer(int x,int y) //设置控制台光标位置
 {
 	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	COORD pos;
@@ -9,7 +9,7 @@
 	pos.Y=y;
 	SetConsoleCursorPosition(hOut,pos);
 }
-void set_console_color(unsigned short color_index)
+void set_console_color(unsigned short color_index) //设置输出颜色
 {
 	if(color_index==0)
     	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),BACKGROUND_INTENSITY |
@@ -29,7 +29,7 @@ FOREGROUND_GREEN);
 }
 
 
-int get_windows_size()
+int get_windows_size() //得到控制台大小
 {
 	 CONSOLE_SCREEN_BUFFER_INFO csbi;
 	 GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
