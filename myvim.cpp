@@ -140,7 +140,7 @@ void add_op(char name,int x,int y,char e) //记录一个操作并存储起来
 }
 
 int paste();
-void input(char t,int recored=1)
+void input(char t,int recored=1) //将输入的字符保存到结构中
 {
     if(t==13){
         if(recored)
