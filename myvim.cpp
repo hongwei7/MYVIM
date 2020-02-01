@@ -4,7 +4,7 @@
 #include <windows.h>
 #include<fstream>
 #include "color.cpp"
-#include <string>
+//#include <string>
 #include<iostream>
 using namespace std;
 #define max_size 50
