@@ -3,7 +3,7 @@
 #include<ctype.h>
 #include <windows.h>
 #include<fstream>
-#include "color.cpp" //控制台光标、颜色控制代码
+#include "color.cpp" //控制台光标、颜色控制代码文件
 #include <string>
 #include<iostream>
 using namespace std;
@@ -218,22 +218,12 @@ void print() //显示的刷新函数
     set_console_color(0);
     Node *q=content;
     while(q!=NULL){
-        /*
-        if(q==pointer_x){
-                ;
-                //printf("_");
-            }*/
         Node *p=q->next;
         if(localy>=print_area_y&&localy<=print_area_y+rows){
             while(p!=NULL){
                 if(localx>=print_area_x&&localx<print_area_x+columns)
                     printf("%c",p->data);
                 localx++;
-                /*
-                if(p==pointer_x){
-                    ;
-                    //printf("_");
-                }*/
                 p=p->next;
             }
             if(localy+1<=print_area_y+rows)
@@ -255,12 +245,13 @@ void print() //显示的刷新函数
         printf("%10s   ","功能模式");
     }
     set_console_color(0);
-    printf("查看帮助(H)  ");
+    printf("查看帮助(H)  粘贴请使用Ctrl+V  ");
     printf("本行字数:%2d   行:%2d   列:%2d   ",pointer_y-> length,pointer_y_num,pointer_x_num);
     set_console_color(3);
     cout<<title;
     set_console_color(0);
     set_pointer(pointer_x_num- print_area_x ,pointer_y_num -print_area_y );
+
  }
 
 int check_op=0;
@@ -275,6 +266,8 @@ int check(char key,int recored=1) //检查输入操作函数
     }
     //输入退回
     if(key==8){  
+        if(INSERTMODE==0)
+        return OP;
         if(pointer_x_num==0){
             if(pointer_y_num==0)
                 return OP;
@@ -601,7 +594,7 @@ void read() //文件读取函数
     system("cls");
     printf("输入要打开的文件名（或加载路径+文件名）:\n");
     cin>>file;
-    char ch[200],*p;
+    char ch[2000],*p;
     //printf("%s\n", file);
     ifstream infile(file,ios::in);
     if(!infile){
@@ -609,8 +602,10 @@ void read() //文件读取函数
         system("pause");
         return;
     }
+    while(s->now!=-1)
+        roolback(s);
     while(!infile.eof()){
-        infile.getline(ch,200,'\n');
+        infile.getline(ch,2000,'\n');
         p=ch;
         while(*p!='\0'){
             input(*(p++));
@@ -627,8 +622,8 @@ void help() //帮助函数
 {
     set_console_color(0);
     system("cls");
-    char sss[]="文本输入使用说明：\n\n 功能模式（默认）\n\n- i 进入输入模式\n- u 撤回此前操作\n- r 重做已撤回的操作\n- h 帮助\n- q 退出\n\n 输入模式（INSERTMODE）\n\n- Esc 返回功能模式\n- 输入任意字符\n- Backspace 删除字符\n- Enter 换行\n- 方向键 移动光标\n- Ctrl+V 粘贴";
-    printf("%s\n", sss);
+    char sss[]="文本输入使用说明：\n\n 功能模式（默认）\n\n- i 进入输入模式\n- u 撤回此前操作\n- r 重做已撤回的操作\n- o 打开文本\n- s 保存文本\n- h 帮助\n- q 退出\n\n 输入模式（INSERTMODE）\n\n- Esc 返回功能模式\n- 输入任意字符\n- Backspace 删除字符\n- Enter 换行\n- 方向键 移动光标\n- Ctrl+V 粘贴";
+    printf("%s\n\n输入任意键进入程序\n", sss);
     getch();
 }
 int main() //程序主函数
